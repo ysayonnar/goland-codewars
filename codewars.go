@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	fmt.Println(ToCamelCase("The_Stealth_Warrior"))
+
 }
 
 func ArrayDiff(a, b []int) []int {
@@ -121,5 +121,23 @@ func FindOutlier(integers []int) int {
 }
 
 func Order(sentence string) string {
-	return sentence
+	if len(sentence) == 0 {
+		return ""
+	}
+	var res []string
+	wordsMap := map[int]string{}
+
+	for _, word := range strings.Split(sentence, " ") {
+		letters := strings.Split(word, "")
+		for _, letter := range letters {
+			if conv, err := strconv.Atoi(letter); err == nil {
+				wordsMap[conv-1] = word
+			}
+		}
+	}
+
+	for i := 0; i < len(wordsMap); i++ {
+		res = append(res, wordsMap[i])
+	}
+	return strings.Join(res, " ")
 }
