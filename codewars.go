@@ -1,12 +1,57 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
 
 func main() {
+	snailMap := [][]int{{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16}}
+	//snailMap := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	fmt.Println(Snail(snailMap))
+}
 
+func Snail(snaipMap [][]int) []int {
+	res := []int{}
+	if len(snaipMap) == 0 {
+		return res
+	}
+	if len(snaipMap) == 1 {
+		return append(make([]int, 0), snaipMap[0]...)
+	}
+
+	concatedSnaip := make([][]int, len(snaipMap)-2)
+	for i := range concatedSnaip {
+		concatedSnaip[i] = make([]int, len(snaipMap)-2)
+	}
+
+	for i := 0; i < len(snaipMap)-2; i++ {
+		for j := 0; j < len(snaipMap)-2; j++ {
+			concatedSnaip[i][j] = snaipMap[i+1][j+1]
+		}
+	}
+
+	for i := 0; i < len(snaipMap[0]); i++ {
+		res = append(res, snaipMap[0][i])
+	}
+	for i := 1; i < len(snaipMap); i++ {
+		res = append(res, snaipMap[i][len(snaipMap)-1])
+	}
+	for i := len(snaipMap) - 2; i >= 0; i-- {
+		res = append(res, snaipMap[len(snaipMap)-1][i])
+	}
+	for i := len(snaipMap) - 2; i > 0; i-- {
+		res = append(res, snaipMap[i][0])
+	}
+
+	res = append(res, Snail(concatedSnaip)...)
+
+	fmt.Println(concatedSnaip)
+	return res
 }
 
 func ArrayDiff(a, b []int) []int {
