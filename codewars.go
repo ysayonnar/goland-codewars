@@ -15,6 +15,22 @@ func main() {
 	fmt.Println(Snail(snailMap))
 }
 
+func MoveZeros(arr []int) []int {
+	zeroesCounter := 0
+	res := []int{}
+	for _, el := range arr {
+		if el == 0 {
+			zeroesCounter++
+		} else {
+			res = append(res, el)
+		}
+	}
+	for i := 0; i < zeroesCounter; i++ {
+		res = append(res, 0)
+	}
+	return res
+}
+
 func Snail(snaipMap [][]int) []int {
 	res := []int{}
 	if len(snaipMap) == 0 {
