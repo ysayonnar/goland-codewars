@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	fmt.Println(Solution([]int{-6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20}))
+	fmt.Println(ListSquared(1, 250))
 }
 
 func Solution(arr []int) string {
@@ -30,6 +31,29 @@ func Solution(arr []int) string {
 		}
 	}
 	return strings.Join(res, ",")
+}
+
+func ListSquared(m, n int) [][]int {
+	res := [][]int{}
+
+	for i := m; i <= n; i++ {
+		squaredDivisors := []int{}
+		for d := 1; d <= i; d++ {
+			if i%d == 0 {
+				squaredDivisors = append(squaredDivisors, i/d)
+			}
+		}
+		sum := 0
+		for _, el := range squaredDivisors {
+			sum += el * el
+		}
+		root := math.Sqrt(float64(sum))
+		if root == float64(int(root)) {
+			res = append(res, []int{i, sum})
+		}
+	}
+
+	return res
 }
 
 func MoveZeros(arr []int) []int {
