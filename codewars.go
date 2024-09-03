@@ -7,12 +7,29 @@ import (
 )
 
 func main() {
-	snailMap := [][]int{{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 10, 11, 12},
-		{13, 14, 15, 16}}
-	//snailMap := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
-	fmt.Println(Snail(snailMap))
+	fmt.Println(Solution([]int{-6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20}))
+}
+
+func Solution(arr []int) string {
+	list := append(arr, 0)
+	res := []string{}
+	streak := 0
+	for i := 0; i < len(list)-1; i++ {
+		if list[i] == list[i+1]-1 {
+			streak++
+		} else {
+			if streak > 1 {
+				res = append(res, fmt.Sprintf("%v-%v", list[i-streak], list[i]))
+			} else {
+				if streak > 0 {
+					res = append(res, strconv.Itoa(list[i-1]))
+				}
+				res = append(res, strconv.Itoa(list[i]))
+			}
+			streak = 0
+		}
+	}
+	return strings.Join(res, ",")
 }
 
 func MoveZeros(arr []int) []int {
