@@ -8,7 +8,36 @@ import (
 )
 
 func main() {
-	fmt.Println(ListSquared(1, 250))
+	fmt.Println(HumanReadableTime(45296))
+}
+
+//8,5
+
+func HumanReadableTime(seconds int) string {
+	res := []string{}
+
+	hours := seconds / 3600
+	if len(strconv.Itoa(hours)) == 1 {
+		res = append(res, fmt.Sprintf("0%v", strconv.Itoa(hours)))
+	} else {
+		res = append(res, strconv.Itoa(hours))
+	}
+
+	seconds -= hours * 3600
+	minutes := seconds / 60
+	if len(strconv.Itoa(minutes)) == 1 {
+		res = append(res, fmt.Sprintf("0%v", strconv.Itoa(minutes)))
+	} else {
+		res = append(res, strconv.Itoa(minutes))
+	}
+
+	seconds -= minutes * 60
+	if len(strconv.Itoa(seconds)) == 1 {
+		res = append(res, fmt.Sprintf("0%v", strconv.Itoa(seconds)))
+	} else {
+		res = append(res, strconv.Itoa(seconds))
+	}
+	return strings.Join(res, ":")
 }
 
 func Solution(arr []int) string {
