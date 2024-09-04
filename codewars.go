@@ -8,10 +8,63 @@ import (
 )
 
 func main() {
-	fmt.Println(HumanReadableTime(45296))
+	fmt.Println(FormatDuration(3662))
 }
 
-//8,5
+type dateType struct {
+	name  string
+	value int64
+}
+
+func FormatDuration(seconds int64) string {
+	res := []string{}
+	data := []dateType{}
+
+	years := seconds / 31536000
+	data = append(data, dateType{name: "years", value: years})
+	seconds -= years * 31536000
+	days := seconds / 86400
+	data = append(data, dateType{name: "days", value: days})
+	seconds -= days * 86400
+	hours := seconds / 3600
+	data = append(data, dateType{name: "hours", value: hours})
+	seconds -= hours * 3600
+	minutes := seconds / 60
+	data = append(data, dateType{name: "minutes", value: minutes})
+	seconds -= minutes * 60
+	data = append(data, dateType{name: "seconds", value: seconds})
+
+	realLength := len(data)
+
+	for i := 0; i < len(data); i++ {
+		if data[i].value == 0 {
+			realLength--
+		}
+	}
+
+	for i := 0; i < len(data); i++ {
+		if data[i].value != 0 {
+			if data[i].value == 1 {
+				data[i].name = data[i].name[:len(data[i].name)-1]
+			}
+			if realLength == 1 {
+				return fmt.Sprintf("%v %v", data[i].value, data[i].name)
+				break
+			}
+			res = append(res, fmt.Sprintf("%v %v, ", data[i].value, data[i].name))
+		}
+	}
+	lastEl := res[len(res)-1]
+	res[len(res)-1] = lastEl[:len(lastEl)-2]
+
+	if len(res) > 1 {
+		res[len(res)-1] = fmt.Sprintf(" and %v", res[len(res)-1])
+		prevEl := res[len(res)-2]
+		res[len(res)-2] = res[len(res)-2][:len(prevEl)-2]
+	}
+
+	return strings.Join(res, "")
+}
 
 func HumanReadableTime(seconds int) string {
 	res := []string{}
