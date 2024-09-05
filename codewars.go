@@ -8,7 +8,58 @@ import (
 )
 
 func main() {
-	fmt.Println(FormatDuration(3662))
+	RGB(148, 0, 211)
+}
+
+func convertSingleRgb(value int) []int {
+	if value < 0 {
+		value = 0
+	}
+	if value > 255 {
+		value = 255
+	}
+	var x int
+	var y int
+	x = value / 16
+	y = value - 16*x
+	return []int{x, y}
+}
+
+func RGB(r, g, b int) string {
+	convertedValues := []int{}
+	convertedValues = append(convertedValues, convertSingleRgb(r)...)
+	convertedValues = append(convertedValues, convertSingleRgb(g)...)
+	convertedValues = append(convertedValues, convertSingleRgb(b)...)
+	res := []string{}
+
+	for _, el := range convertedValues {
+		switch el {
+		case 10:
+			res = append(res, "A")
+		case 11:
+			res = append(res, "B")
+		case 12:
+			res = append(res, "C")
+		case 13:
+			res = append(res, "D")
+		case 14:
+			res = append(res, "E")
+		case 15:
+			res = append(res, "F")
+		default:
+			res = append(res, strconv.Itoa(el))
+		}
+	}
+
+	return strings.Join(res, "")
+}
+
+func SumOfIntervals(intervals [][2]int) int {
+	sum := 0
+	for _, inteval := range intervals {
+		sum += inteval[len(inteval)-1] - inteval[0]
+	}
+	return sum
 }
 
 type dateType struct {
