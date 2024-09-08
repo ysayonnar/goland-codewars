@@ -8,7 +8,63 @@ import (
 )
 
 func main() {
-	RGB(148, 0, 211)
+	fmt.Println(DecodeMorse(".... . -.--   .--- ..- -.. ."))
+}
+
+//26,8
+
+func DecodeMorse(morseCode string) interface{} {
+	morseWords := strings.Split(morseCode, "   ")
+	convertedWords := []string{}
+
+	for _, word := range morseWords {
+		convertedWord := []string{}
+		letters := strings.Split(word, " ")
+		for _, letter := range letters {
+			//convertedWord = append(convertedWord, MORSE_CODE[letter])
+			convertedWord = append(convertedWord, letter)
+		}
+		convertedWords = append(convertedWords, strings.Join(convertedWord, ""))
+	}
+
+	res := []string{}
+	for _, el := range convertedWords {
+		if el == "" {
+			continue
+		} else {
+			res = append(res, el)
+		}
+	}
+
+	return strings.Join(res, " ")
+}
+
+func GetMinBase(n uint64) uint64 {
+	var r uint64
+	if n%2 == 0 {
+		r = 1
+	}
+	if n%2 != 0 {
+		r = 2
+	}
+	copuOfN := n
+
+	for copuOfN >= r {
+		ostatok := int(copuOfN % r)
+		copuOfN /= r
+		if copuOfN < r && copuOfN != 1 {
+			r += 2
+			copuOfN = n
+			continue
+		}
+		if ostatok != 1 {
+			r += 2
+			copuOfN = n
+			continue
+		}
+	}
+	return r
+
 }
 
 func convertSingleRgb(value int) []int {
