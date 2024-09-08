@@ -14,7 +14,7 @@ func main() {
 //26,8
 
 func DecodeMorse(morseCode string) interface{} {
-	morseWords := strings.Split(morseCode, "   ")
+	morseWords := strings.Split(strings.TrimSpace(morseCode), "   ")
 	convertedWords := []string{}
 
 	for _, word := range morseWords {
@@ -27,16 +27,7 @@ func DecodeMorse(morseCode string) interface{} {
 		convertedWords = append(convertedWords, strings.Join(convertedWord, ""))
 	}
 
-	res := []string{}
-	for _, el := range convertedWords {
-		if el == "" {
-			continue
-		} else {
-			res = append(res, el)
-		}
-	}
-
-	return strings.Join(res, " ")
+	return strings.Join(convertedWords, " ")
 }
 
 func GetMinBase(n uint64) uint64 {
