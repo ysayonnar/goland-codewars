@@ -3,15 +3,159 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	fmt.Println(DecodeMorse(".... . -.--   .--- ..- -.. ."))
+	fmt.Println(Determinant([][]int{{2, 5, 3}, {1, -2, -1}, {1, 3, 4}}))
+	fmt.Println(getMinorMatrix([][]int{{2, 5, 3}, {1, -2, -1}, {1, 3, 4}}, 3))
 }
 
-//26,8
+//|2 5 4|
+//|1 -2 -1|
+//|1 3 4|
+
+//|1  2  3   4|
+//|5  6  7   8|
+//|9  10 11 12|
+//|13 14 15 16|
+
+//28,7
+
+func getMinorMatrix(matrix [][]int, columnIndex int) [][]int {
+	newMatrix := [][]int{}
+
+	for i := 1; i < len(matrix); i++ {
+		currentRow := []int{}
+		for j := 0; j < len(matrix); j++ {
+			if j != columnIndex-1 {
+				currentRow = append(currentRow, matrix[i][j])
+			}
+		}
+		newMatrix = append(newMatrix, currentRow)
+	}
+	return newMatrix
+}
+
+func Determinant(matrix [][]int) int {
+	det := 0
+	if len(matrix) == 1 {
+		return matrix[0][0]
+	}
+	if len(matrix) == 2 {
+		return matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]
+	}
+	for k := 1; k <= len(matrix); k++ {
+		if (k+1)%2 == 0 {
+			det += Determinant(getMinorMatrix(matrix, k)) * matrix[0][k-1]
+		} else {
+			det -= Determinant(getMinorMatrix(matrix, k)) * matrix[0][k-1]
+		}
+	}
+	return det
+}
+
+func multiplyString(str string, factor int) string {
+	res := []string{}
+
+	for i := 0; i < factor; i++ {
+		res = append(res, str)
+	}
+
+	return strings.Join(res, "")
+}
+
+func DecodeBits(bits string) string {
+	//убираю нули в начале и конце
+	temp := strings.Split(bits, "")
+	for i := 0; i < len(temp); i++ {
+		if temp[i] == "0" {
+			temp[i] = " "
+		} else {
+			break
+		}
+	}
+
+	for i := len(temp) - 1; i > 0; i-- {
+		if temp[i] == "0" {
+			temp[i] = " "
+		} else {
+			break
+		}
+	}
+	bits = strings.TrimSpace(strings.Join(temp, ""))
+
+	//нахожу коэфф time unit
+	streaks := []int{}
+	currentStreak := 1
+
+	for i, el := range strings.Split(bits, "") {
+		if len(bits) == 1 {
+			streaks = append(streaks, 3)
+		}
+		if i == len(bits)-1 {
+			break
+		}
+		if el == "1" && strings.Split(bits, "")[i+1] == "1" {
+			currentStreak++
+		} else if el == "1" {
+			streaks = append(streaks, currentStreak)
+			currentStreak = 1
+		} else {
+			currentStreak = 1
+		}
+	}
+
+	zeroesStreaks := []int{}
+	currentStreak = 1
+	for i, el := range strings.Split(bits, "") {
+
+		if el == "0" && bits[i+1] == 0 {
+			currentStreak++
+		} else if el == "0" {
+			zeroesStreaks = append(zeroesStreaks, currentStreak)
+			currentStreak = 1
+		} else {
+			currentStreak = 1
+		}
+	}
+
+	tempMap := map[int]int{}
+	for i, el := range streaks {
+		tempMap[el] = i
+	}
+	streaks = []int{}
+	for key, _ := range tempMap {
+		streaks = append(streaks, key)
+	}
+	sort.Ints(streaks)
+
+	factor := streaks[len(streaks)-1] / 3
+
+	bitsWords := strings.Split(bits, multiplyString("0", factor*7))
+	res := []string{}
+	for _, bitWord := range bitsWords {
+		convertedWord := []string{}
+		letters := strings.Split(bitWord, multiplyString("0", factor*3))
+		for _, letter := range letters {
+			convertedLetter := []string{}
+			symbols := strings.Split(letter, multiplyString("0", factor))
+			for _, symbol := range symbols {
+				if symbol == multiplyString("1", factor*3) {
+					convertedLetter = append(convertedLetter, "-")
+				} else {
+					convertedLetter = append(convertedLetter, ".")
+				}
+			}
+			convertedWord = append(convertedWord, strings.Join(convertedLetter, ""))
+		}
+		res = append(res, strings.Join(convertedWord, " "))
+	}
+
+	return strings.Join(res, "   ")
+}
 
 func DecodeMorse(morseCode string) interface{} {
 	morseWords := strings.Split(strings.TrimSpace(morseCode), "   ")
@@ -23,6 +167,7 @@ func DecodeMorse(morseCode string) interface{} {
 		for _, letter := range letters {
 			//convertedWord = append(convertedWord, MORSE_CODE[letter])
 			convertedWord = append(convertedWord, letter)
+
 		}
 		convertedWords = append(convertedWords, strings.Join(convertedWord, ""))
 	}
